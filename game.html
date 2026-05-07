@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Block Quest</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  touch-action: none;
+}
+
+body {
+  overflow: hidden;
+  background: #87ceeb;
+  font-family: Arial, sans-serif;
+}
+
+#game {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background:
+    linear-gradient(#87ceeb 0%, #87ceeb 70%, #7ec850 70%, #5f9f3e 100%);
+}
+
+.block {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  image-rendering: pixelated;
+}
+
+.ground {
+  background:
+    linear-gradient(to bottom,
+      #55aa33 0 15%,
+      #8b5a2b 15% 100%);
+  border: 2px solid #3a2a14;
+}
+
+.stone {
+  background: #8f8f8f;
+  border: 2px solid #666;
+}
+
+.goal {
+  background:
+    repeating-linear-gradient(
+      45deg,
+      gold,
+      gold 10px,
+      #ffdf00 10px,
+      #ffdf00 20px
+    );
+  border: 4px solid #fff176;
+  box-shadow: 0 0 20px gold;
+}
+
+#player {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  background: #2ecc71;
+  border: 3px solid #111;
+  z-index: 10;
+}
+
+#player::before {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #111;
+  left: 10px;
+  top: 12px;
+  box-shadow: 18px 0 #111;
+}
+
+#player::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 6px;
+  background: #111;
+  left: 12px;
+  top: 30px;
+}
+
+#controls {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 20px;
+  z-index: 100;
+}
+
+.btn {
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  border: 4px solid #222;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(5px);
+  color: white;
+  font-size: 40px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.btn:active {
+  transform: scale(0.92);
+}
+
+#jump {
+  position: fixed;
+  right: 20px;
+  bottom: 120px;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  border: 4px solid #222;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  z-index: 100;
+}
+
+#win {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.8);
+  color: white;
+  font-size: 56px;
+  font-weight: bold;
+  z-index: 999;
+  flex-direction: column;
+  text-align: center;
+}
+
+#win button {
+  margin-top: 20px;
+  padding: 16px 28px;
+  font-size: 24px;
+  border: none;
+  border-radius: 14px;
+  background: #55cc55;
+  color: white;
+}
+
+#title {
+  position: fixed;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 32px;
+  font-weight: bold;
+  text-shadow: 3px 3px 0 #000;
+  z-index: 50;
+}
+</style>
+</head>
+<body>
+
+<div id="title">BLOCK QUEST</div>
+
+<div id="game">
+  <div id="player"></div>
+
+  <!-- Ground -->
+  <div class="block ground" style="left:0px;top:420px;width:3000px;"></div>
+
+  <!-- Platforms -->
+  <div class="block stone" style="left:300px;top:350px"></div>
+  <div class="block stone" style="left:450px;top:300px"></div>
+  <div class="block stone" style="left:600px;top:240px"></div>
+  <div class="block stone" style="left:780px;top:200px"></div>
+  <div class="block stone" style="left:980px;top:260px"></div>
+  <div class="block stone" style="left:1180px;top:220px"></div>
+  <div class="block stone" style="left:1380px;top:180px"></div>
+
+  <!-- Goal -->
+  <div id="goal" class="block goal" style="left:1550px;top:120px"></div>
+</div>
+
+<div id="controls">
+  <div class="btn" id="left">◀</div>
+  <div class="btn" id="right">▶</div>
+</div>
+
+<button id="jump">JUMP</button>
+
+<div id="win">
+  <div>YOU WIN!</div>
+  <button onclick="location.reload()">RESTART</button>
+</div>
+
+<script>
+const player = document.getElementById('player');
+const goal = document.getElementById('goal');
+const win = document.getElementById('win');
+const game = document.getElementById('game');
+
+let x = 40;
+let y = 300;
+let vx = 0;
+let vy = 0;
+let onGround = false;
+
+const gravity = 0.7;
+const speed = 5;
+const jumpPower = -14;
+
+const blocks = [...document.querySelectorAll('.ground, .stone')];
+
+const keys = {
+  left: false,
+  right: false
+};
+
+function setButton(id, key) {
+  const btn = document.getElementById(id);
+
+  btn.addEventListener('touchstart', e => {
+    e.preventDefault();
+    keys[key] = true;
+  });
+
+  btn.addEventListener('touchend', e => {
+    e.preventDefault();
+    keys[key] = false;
+  });
+}
+
+setButton('left', 'left');
+setButton('right', 'right');
+
+const jumpBtn = document.getElementById('jump');
+
+jumpBtn.addEventListener('touchstart', e => {
+  e.preventDefault();
+
+  if (onGround) {
+    vy = jumpPower;
+    onGround = false;
+  }
+});
+
+function rectsCollide(a, b) {
+  return (
+    a.x < b.x + b.w &&
+    a.x + a.w > b.x &&
+    a.y < b.y + b.h &&
+    a.y + a.h > b.y
+  );
+}
+
+function update() {
+  vx = 0;
+
+  if (keys.left) vx = -speed;
+  if (keys.right) vx = speed;
+
+  x += vx;
+
+  vy += gravity;
+  y += vy;
+
+  onGround = false;
+
+  const playerRect = {
+    x,
+    y,
+    w: 48,
+    h: 48
+  };
+
+  for (const block of blocks) {
+    const bx = parseInt(block.style.left);
+    const by = parseInt(block.style.top);
+    const bw = block.offsetWidth;
+    const bh = block.offsetHeight;
+
+    const blockRect = {
+      x: bx,
+      y: by,
+      w: bw,
+      h: bh
+    };
+
+    if (rectsCollide(playerRect, blockRect)) {
+      if (vy >= 0 && y + 48 - vy <= by + 10) {
+        y = by - 48;
+        vy = 0;
+        onGround = true;
+      }
+    }
+  }
+
+  // camera scroll
+  const camX = Math.max(0, x - window.innerWidth / 2);
+  game.style.transform = `translateX(${-camX}px)`;
+
+  player.style.left = x + 'px';
+  player.style.top = y + 'px';
+
+  // win detection
+  const goalRect = {
+    x: parseInt(goal.style.left),
+    y: parseInt(goal.style.top),
+    w: 64,
+    h: 64
+  };
+
+  if (rectsCollide(playerRect, goalRect)) {
+    win.style.display = 'flex';
+  }
+
+  requestAnimationFrame(update);
+}
+
+update();
+</script>
+
+</body>
+</html>
