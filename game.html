@@ -524,65 +524,32 @@ function draw(){
   ctx.lineTo(goal.x+14,goal.y+40);
   ctx.fill();
 
-// monsters (Creeper-like)
+  // monsters
 
-for(const m of monsters){
+  for(const m of monsters){
 
-  const mx = m.x;
-  const my = m.y;
+    ctx.fillStyle="#2ecc71";
+    ctx.fillRect(m.x,m.y,40,40);
 
-  // body
-  ctx.fillStyle = "#2ecc71";
-  ctx.fillRect(mx, my, m.w, m.h);
+    ctx.fillStyle="#111";
 
-  // darker patches (creeper texture)
-  ctx.fillStyle = "#1e7f45";
-  ctx.fillRect(mx + 4, my + 6, 10, 10);
-  ctx.fillRect(mx + 18, my + 18, 10, 10);
-  ctx.fillRect(mx + 8, my + 32, 8, 8);
+    ctx.fillRect(m.x+7,m.y+10,7,7);
+    ctx.fillRect(m.x+24,m.y+10,7,7);
 
-  // face (classic creeper)
-  ctx.fillStyle = "#111";
+    ctx.fillRect(m.x+10,m.y+26,20,5);
+  }
 
-  // eyes
-  ctx.fillRect(mx + 8, my + 10, 6, 6);
-  ctx.fillRect(mx + 18, my + 10, 6, 6);
+  // player
 
-  // mouth T shape
-  ctx.fillRect(mx + 14, my + 18, 6, 14);
-  ctx.fillRect(mx + 10, my + 26, 14, 6);
-}
+  ctx.fillStyle="#3498db";
+  ctx.fillRect(player.x,player.y,player.w,player.h);
 
-// PLAYER (Steve-like)
+  ctx.fillStyle="#111";
 
-const px = player.x;
-const py = player.y;
+  ctx.fillRect(player.x+8,player.y+10,6,6);
+  ctx.fillRect(player.x+24,player.y+10,6,6);
 
-// HEAD (16x16 как в Minecraft)
-ctx.fillStyle = "#f2c9a0";
-ctx.fillRect(px + 8, py, 16, 16);
-
-// hair
-ctx.fillStyle = "#3b2f2f";
-ctx.fillRect(px + 8, py, 16, 4);
-
-// eyes
-ctx.fillStyle = "#111";
-ctx.fillRect(px + 12, py + 7, 2, 2);
-ctx.fillRect(px + 18, py + 7, 2, 2);
-
-// BODY (16x18)
-ctx.fillStyle = "#3aa0ff";
-ctx.fillRect(px + 8, py + 16, 16, 18);
-
-// pants
-ctx.fillStyle = "#2b2b8f";
-ctx.fillRect(px + 8, py + 34, 16, 10);
-
-// legs (2 blocks)
-ctx.fillStyle = "#2b2b2b";
-ctx.fillRect(px + 8, py + 44, 6, 4);
-ctx.fillRect(px + 18, py + 44, 6, 4);
+  ctx.fillRect(player.x+10,player.y+28,18,4);
 
   ctx.restore();
 }
