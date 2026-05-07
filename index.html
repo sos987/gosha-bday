@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minecraft Rodjendanski Poziv</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Trebuchet MS', sans-serif;
+      background: linear-gradient(to bottom, #6ec6ff 0%, #9be15d 100%);
+      overflow-x: hidden;
+      color: white;
+      min-height: 100vh;
+    }
+
+    .background {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .grass {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      height: 120px;
+      background:
+        linear-gradient(to bottom, #47b347 0 20%, #7a4f24 20% 100%);
+      border-top: 8px solid #82ff82;
+      z-index: -1;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px 120px;
+      text-align: center;
+    }
+
+    .logo {
+      font-size: clamp(2.5rem, 7vw, 5rem);
+      font-weight: 900;
+      letter-spacing: 3px;
+      color: #d8ffd8;
+      text-shadow:
+        4px 4px 0 #1d4d1d,
+        8px 8px 0 #122b12;
+      margin-bottom: 10px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .subtitle {
+      font-size: 1.3rem;
+      margin-bottom: 40px;
+      color: #f5fff5;
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+    }
+
+    .card {
+      background: rgba(40, 40, 40, 0.82);
+      border: 6px solid #9b9b9b;
+      border-radius: 8px;
+      padding: 35px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(45deg, rgba(255,255,255,0.03) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(255,255,255,0.03) 25%, transparent 25%);
+      background-size: 24px 24px;
+      pointer-events: none;
+    }
+
+    .hero {
+      font-size: 2.3rem;
+      color: #ffe066;
+      margin-bottom: 25px;
+      text-shadow: 3px 3px 0 #5c4b00;
+    }
+
+    .info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin: 35px 0;
+    }
+
+    .block {
+      background: rgba(0,0,0,0.3);
+      border: 4px solid #6e6e6e;
+      padding: 20px;
+      border-radius: 6px;
+      transition: transform 0.2s;
+    }
+
+    .block:hover {
+      transform: translateY(-4px) scale(1.02);
+    }
+
+    .block h3 {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      color: #8dff8d;
+    }
+
+    .block p {
+      font-size: 1.1rem;
+      line-height: 1.5;
+    }
+
+    .cta {
+      margin-top: 30px;
+      font-size: 1.2rem;
+      line-height: 1.7;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 25px;
+      padding: 16px 34px;
+      background: #5cb85c;
+      color: white;
+      text-decoration: none;
+      font-size: 1.2rem;
+      font-weight: bold;
+      border: 4px solid #3d7a3d;
+      border-radius: 6px;
+      box-shadow: 0 6px 0 #2a542a;
+      transition: all 0.15s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(2px);
+      box-shadow: 0 4px 0 #2a542a;
+    }
+
+    .btn:active {
+      transform: translateY(6px);
+      box-shadow: none;
+    }
+
+    .characters {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 35px;
+      flex-wrap: wrap;
+      font-size: 4rem;
+    }
+
+    .character {
+      animation: bounce 2s infinite;
+    }
+
+    .character:nth-child(2) {
+      animation-delay: 0.3s;
+    }
+
+    .character:nth-child(3) {
+      animation-delay: 0.6s;
+    }
+
+    .footer {
+      margin-top: 30px;
+      font-size: 0.95rem;
+      opacity: 0.8;
+    }
+
+    .pixel {
+      image-rendering: pixelated;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .spark {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      background: #fff27a;
+      animation: sparkle 3s linear infinite;
+      opacity: 0.7;
+    }
+
+    @keyframes sparkle {
+      from {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+      }
+      20% {
+        opacity: 1;
+      }
+      to {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        padding: 24px 18px;
+      }
+
+      .hero {
+        font-size: 1.7rem;
+      }
+
+      .subtitle {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="background"></div>
+  <div class="grass"></div>
+
+  <div class="container">
+    <div class="logo">MINECRAFT PARTY</div>
+    <div class="subtitle">Pridruzi se epskoj avanturi!</div>
+
+    <div class="card">
+      <div class="hero">⚔️ Gosha puni 8 godina! ⚔️</div>
+
+      <p style="font-size: 1.2rem; line-height: 1.8;">
+        Pozvan si na najbolji Minecraft rodjendan godine!<br>
+        Spremi se za crafting, mini igre, pizzu i mnogo zabave!
+      </p>
+
+      <div class="info">
+        <div class="block">
+          <h3>📅 Datum</h3>
+          <p>Subota<br>23. maj<br>u 15:00</p>
+        </div>
+
+        <div class="block">
+          <h3>📍 Lokacija</h3>
+          <p>Bulevar Despota Stefana 29, stan 34, sprat 7<br>Zrenjanin</p>
+        </div>
+
+        <div class="block">
+          <h3>🎮 Dress code</h3>
+          <p>Minecraft majice,<br>zelena boja ili creeper stil 😄</p>
+        </div>
+      </div>
+
+      <div class="cta">
+       <br>
+        Kontakt mama/tata:<br>
+        <strong>+381 63 713 68 83</strong>
+      </div>
+
+      <div class="characters">
+        <div class="character">🟩</div>
+        <div class="character">⛏️</div>
+        <div class="character">💎</div>
+      </div>
+
+      <div class="footer">
+        "Keep calm and mine on!"
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function createSpark() {
+      const spark = document.createElement('div');
+      spark.className = 'spark';
+      spark.style.left = Math.random() * window.innerWidth + 'px';
+      spark.style.animationDuration = (2 + Math.random() * 3) + 's';
+      spark.style.opacity = Math.random();
+      document.body.appendChild(spark);
+
+      setTimeout(() => {
+        spark.remove();
+      }, 5000);
+    }
+
+    setInterval(createSpark, 300);
+  </script>
+</body>
+</html>
