@@ -447,15 +447,6 @@ function drawBlock(x,y,color1,color2){
 
   ctx.fillStyle=color2;
 
-  for(let i=0;i<6;i++){
-    ctx.fillRect(
-      x + Math.random()*TILE,
-      y + Math.random()*TILE,
-      4,
-      4
-    );
-  }
-
   ctx.strokeStyle="#000";
   ctx.strokeRect(x,y,TILE,TILE);
 }
@@ -533,23 +524,32 @@ function draw(){
 
     ctx.fillStyle="#111";
 
-    ctx.fillRect(m.x+7,m.y+10,7,7);
-    ctx.fillRect(m.x+24,m.y+10,7,7);
-
-    ctx.fillRect(m.x+10,m.y+26,20,5);
+    ctx.fillRect(m.x+9,m.y+7,9,9);
+    ctx.fillRect(m.x+24,m.y+7,9,9);
+	
+    ctx.fillRect(m.x+16,m.y+15,9,5);
+	ctx.fillRect(m.x+12,m.y+19,17,7);
+	ctx.fillRect(m.x+12,m.y+26,4,5);
+	ctx.fillRect(m.x+25,m.y+26,4,5);
   }
 
   // player
 
-  ctx.fillStyle="#3498db";
+  ctx.fillStyle="#FCC78E";
   ctx.fillRect(player.x,player.y,player.w,player.h);
+  
+  ctx.fillStyle="#6E5441";
+  ctx.fillRect(player.x,player.y,player.w,12);
+  ctx.fillRect(player.x,player.y+12,8,9);
+  ctx.fillRect(player.x+30,player.y+12,8,9);
+  
+  ctx.fillStyle="#FFFFFF";
+  ctx.fillRect(player.x+8,player.y+25,7,6);
+  ctx.fillRect(player.x+22,player.y+25,7,6);
 
-  ctx.fillStyle="#111";
-
-  ctx.fillRect(player.x+8,player.y+10,6,6);
-  ctx.fillRect(player.x+24,player.y+10,6,6);
-
-  ctx.fillRect(player.x+10,player.y+28,18,4);
+  ctx.fillStyle="#7476BE";
+  ctx.fillRect(player.x+12,player.y+25,6,6);
+  ctx.fillRect(player.x+20,player.y+25,6,6);
 
   ctx.restore();
 }
